@@ -1,19 +1,31 @@
 import React, { Component } from 'react'; 
 import Calendario from './CalendarioComponent'; 
-import { EXCURSIONES } from '../comun/excursiones'; 
+import { EXCURSIONES } from '../comun/excursiones';
+import DetalleExcursion from './DetalleExcursionComponent'; 
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { View } from 'react-native';
+
 class Campobase extends Component { 
     constructor(props) { 
         super(props); 
         this.state = { 
-            excursiones: EXCURSIONES 
+            excursiones: EXCURSIONES,
+            seleccionExcursion: null 
         }; 
+    } 
+
+    onSeleccionExcursion(excursionId) { 
+        this.setState({seleccionExcursion: excursionId}) 
     } 
 
     render() {
 
         return ( 
-            <Calendario excursiones={this.state.excursiones} /> 
-        ); 
+        <View style={{ flex: 1 }}>
+            <DetalleExcursion excursion={this.state.excursiones.filter((excursion) => excursion.id === this.state.seleccionExcursion)[0]} /> 
+            <Calendario excursiones={this.state.excursiones} onPress={( excursionId) => this. onSeleccionExcursion(excursionId)} /> 
+        </View>    
+    );  
     } 
 } 
 export default Campobase;
