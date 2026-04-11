@@ -8,6 +8,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer'; 
 import Home from './HomeComponent';
+import Contacto from './ContactoComponent';
+import QuienesSomos from './QuienesSomosComponent';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -26,6 +28,7 @@ class Campobase extends Component {
         <Stack.Navigator 
           initialRouteName="Home" 
           screenOptions={{ 
+            headerTitleAlign: 'center',
             headerTintColor: '#fff', 
             headerStyle: { backgroundColor: '#015afc' }, 
             headerTitleStyle: { color: '#fff' }, 
@@ -47,6 +50,7 @@ class Campobase extends Component {
       <Stack.Navigator 
         initialRouteName="Calendario" 
         screenOptions={{ 
+          headerTitleAlign: 'center',
           headerTintColor: '#fff', 
           headerStyle: { backgroundColor: '#015afc' }, 
           headerTitleStyle: { color: '#fff' }, 
@@ -70,7 +74,7 @@ class Campobase extends Component {
           name="DetalleExcursion" 
           options={{ 
             title: 'Detalle Excursión', 
-            headerBackTitle: 'Calendario', 
+            headerBackTitle: 'Calendario',
           }} 
         > 
           {(props) => ( 
@@ -83,7 +87,44 @@ class Campobase extends Component {
       </Stack.Navigator> 
     ); 
   }; 
+
+  QuienesSomosNavegador = () => {
+    return(
+      <Stack.Navigator
+        initialRouteName="QuienesSomos"
+        screenOptions={{ 
+          headerTitleAlign: 'center',
+          headerTintColor: '#fff', 
+          headerStyle: { backgroundColor: '#015afc' }, 
+          headerTitleStyle: { color: '#fff' }, 
+        }}>
+      <Stack.Screen 
+      name="QuienesSomos"
+      component={QuienesSomos}
+      options={{ title:'Quiénes somos'}}/>
+      </Stack.Navigator>
+    )
+  }
  
+  ContactoNavegador = () => {
+    return(
+    <Stack.Navigator 
+      initialRouteName="Contacto"
+      screenOptions={{ 
+        headerTitleAlign: 'center',
+        headerTintColor: '#fff', 
+        headerStyle: { backgroundColor: '#015afc' }, 
+        headerTitleStyle: { color: '#fff' }, 
+      }}>
+      <Stack.Screen 
+        name="Contacto"
+        component={Contacto}
+        options={{ title:'Contacto'}}
+      />
+    </Stack.Navigator>
+    )
+  }
+
   DrawerNavegador = () => { 
     return ( 
       <Drawer.Navigator 
@@ -99,10 +140,21 @@ class Campobase extends Component {
           name="Campo base" 
           component={this.HomeNavegador} 
         /> 
+
+        <Drawer.Screen
+          name="Quiénes Somos"
+          component={this.QuienesSomosNavegador}
+        />
+
         <Drawer.Screen 
           name="Calendario" 
           component={this.CalendarioNavegador} 
         /> 
+        
+        <Drawer.Screen
+          name="Contacto"
+          component={this.ContactoNavegador}
+        />
       </Drawer.Navigator> 
     ); 
   }; 

@@ -1,6 +1,6 @@
-import { Component } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Card, Text } from 'react-native-paper';
+import React, { Component } from 'react';
+import { View, StyleSheet, ImageBackground } from 'react-native';
+import { Card, Text, Divider } from 'react-native-paper';
 import { EXCURSIONES } from '../comun/excursiones';
 
 function RenderExcursion(props) {
@@ -9,15 +9,18 @@ function RenderExcursion(props) {
   if (excursion != null) {
     return (
       <Card style={styles.card}>
-        <Card.Title
-          title={excursion.nombre}
-          titleStyle={styles.titulo}
-          style={styles.cardTitle}
-        />
-        <Card.Cover
+        <Divider style={styles.lineaCorta} />
+        <ImageBackground 
           source={require('./imagenes/40Años.png')}
-          style={styles.image}
-        />
+          style={styles.imageBackground}
+          imageStyle={styles.imageStyle}
+        >
+          <View style={styles.textContainer}>
+            <Text style={styles.tituloSuperpuesto}>
+              {excursion.nombre}
+            </Text>
+          </View>
+        </ImageBackground>
         <Card.Content>
           <Text style={styles.descripcion}>
             {excursion.descripcion}
@@ -48,6 +51,7 @@ class DetalleExcursion extends Component {
 const styles = StyleSheet.create({
   card: {
     margin: 8,
+    backgroundColor:'#fff'
   },
   image: {
     marginHorizontal: 0,
@@ -61,6 +65,33 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     alignItems: 'center',
+  },
+  lineaCorta:{
+    width: '85%',
+    height: 1,
+    backgroundColor: '#ccc',
+    alignSelf: 'center',
+    marginTop: 15,
+  },
+  imageBackground:{
+    width:'100%',
+    height:180,
+    justifyContent: 'flex-start',
+    alignItems:'center',
+    marginTop:15,
+  },
+  imageStyle:{
+    resizeMode:'cover',
+  },
+  tituloSuperpuesto:{
+    color:'chocolate',
+    fontSize:24,
+    fontWeight:'bold',
+    textAlign:'center',
+  },
+  textContainer:{
+    padding:10,
+    borderRadius:5,
   },
 });
 
