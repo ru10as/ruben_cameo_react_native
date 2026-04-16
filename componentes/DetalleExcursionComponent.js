@@ -3,6 +3,7 @@ import { View, StyleSheet, ImageBackground, ScrollView, FlatList } from 'react-n
 import { Card, Text, Divider, IconButton } from 'react-native-paper'; 
 import { EXCURSIONES } from '../comun/excursiones';
 import { COMENTARIOS } from '../comun/comentarios';
+import { baseUrl, colorGaztaroaOscuro } from '../comun/comun';
 
 function RenderExcursion(props) {
   const excursion = props.excursion;
@@ -10,9 +11,9 @@ function RenderExcursion(props) {
   if (excursion != null) {
     return (
       <Card style={styles.card}>
-        <Divider style={styles.lineaCorta} />
+        {/*<Divider style={styles.lineaCorta} />*/}
         <ImageBackground 
-          source={require('./imagenes/40Años.png')}
+          source={{ uri: baseUrl + excursion.imagen }}
           style={styles.imageBackground}
           imageStyle={styles.imageStyle}
         >
@@ -133,7 +134,7 @@ class DetalleExcursion extends Component {
 const styles = StyleSheet.create({
   card: {
     margin: 8,
-    backgroundColor: '#ffffff',
+    //backgroundColor: '#ffffff',
   },
   image: {
     marginHorizontal: 0,
@@ -158,15 +159,16 @@ const styles = StyleSheet.create({
   imageBackground:{
     width:'100%',
     height:180,
-    justifyContent: 'flex-start',
+    //justifyContent: 'flex-start',
+    justifyContent:'center',
     alignItems:'center',
-    marginTop:15,
+    //marginTop:15,
   },
   imageStyle:{
     resizeMode:'cover',
   },
   tituloSuperpuesto:{
-    color:'chocolate',
+    color: 'white',
     fontSize:24,
     fontWeight:'bold',
     textAlign:'center',

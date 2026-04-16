@@ -4,6 +4,7 @@ import { Card, Text, Divider } from 'react-native-paper';
 import { EXCURSIONES } from '../comun/excursiones';
 import { CABECERAS } from '../comun/cabeceras';
 import { ACTIVIDADES } from '../comun/actividades';
+import { baseUrl, colorGaztaroaOscuro } from '../comun/comun';
 
 function RenderItem({ item }) {
   if (!item) {
@@ -12,9 +13,11 @@ function RenderItem({ item }) {
 
   return (
     <Card style={styles.card}>
-      <Divider style={styles.lineaCorta} />
+      
+      {/*<Divider style={styles.lineaCorta} />*/}
       <ImageBackground 
-        source={require('./imagenes/40Años.png')}
+        //source={require('./imagenes/40Años.png')}
+        source={{ uri: baseUrl + item.imagen }}
         style={styles.imageBackground}
         imageStyle={styles.imageStyle}
       >
@@ -57,7 +60,6 @@ class Home extends Component {
 const styles = StyleSheet.create({
   card: {
     margin: 8,
-    backgroundColor:'#fff',
   },
   image: {
     marginHorizontal: 0,
@@ -88,14 +90,12 @@ const styles = StyleSheet.create({
   imageBackground:{
     width:'100%',
     height:180,
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     alignItems:'center',
-    marginTop:15,
   },
   lineaCorta:{
     width: '85%',
     height: 1,
-    backgroundColor: '#ccc',
     alignSelf: 'center',
     marginTop: 15,
   }

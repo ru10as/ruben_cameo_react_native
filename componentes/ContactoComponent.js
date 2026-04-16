@@ -2,14 +2,13 @@ import React from "react";
 import { ScrollView,StyleSheet } from "react-native";
 import { Card,Text,Divider } from "react-native-paper";
 
+
 function Contacto(){
     return(
         <ScrollView style={styles.container}>
             <Card style={styles.card}>
-                <Card.Title title="Información de contacto" titleStyle={styles.cardTitle}>
+                <Card.Title title="Contacto" titleStyle={styles.cardTitle}>
                 </Card.Title>
-
-                <Divider style={styles.linea} />
 
                 <Card.Content>
                     <Text style={styles.parrafo}>
@@ -45,7 +44,7 @@ const styles = StyleSheet.create({
     },
     cardTitle:{
         fontWeight:'bold',
-        fontSize:17,
+        fontSize:25,
         textAlign:'center',
         padding:3,
         marginTop:15,

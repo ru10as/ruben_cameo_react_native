@@ -3,12 +3,12 @@ import { Component } from "react";
 import { FlatList, View, ScrollView, StyleSheet } from "react-native";
 import { ACTIVIDADES } from "../comun/actividades";
 import { Avatar, Card, Text, List, Divider } from "react-native-paper";
+import { baseUrl, colorGaztaroaOscuro } from '../comun/comun';
 
 function Historia(){
     return(
         <Card style={styles.card}>
             <Card.Title title="Un poquito de historia" titleStyle={styles.cardTitle}></Card.Title>
-            <Divider style={styles.linea} />
             <Card.Content>
                 <Text style={styles.textoDeHistoria}>
                     El nacimiento del club de montaña Gaztaroa se remonta a la 
@@ -52,8 +52,8 @@ class QuienesSomos extends Component {
                         <Avatar.Image 
                             {...props}
                             size={48}
-                            style={{ backgroundColor: 'transparent', marginLeft:10}}
-                            source={require('./imagenes/40Años.png')}
+                            style={{backgroundColor: 'transparent', marginLeft:10}}
+                            source={{uri: baseUrl + item.imagen}}
                         />
                     </View>
             )}/>
@@ -68,7 +68,6 @@ class QuienesSomos extends Component {
 
                 <Card style={styles.card}>
                     <Card.Title title="Actividades y recursos" titleStyle={styles.cardTitle} />
-                    <Divider style={styles.linea} />
 
                     <FlatList
                         data={this.state.actividades}
@@ -89,12 +88,13 @@ const styles = StyleSheet.create({
         shadowColor: '#000',
         shadowOpacity: 0.1,
         shadowRadius: 4,
-        backgroundColor:'#fff'
+        //backgroundColor:'#fff'
     },
     cardTitle:{
         textAlign:'center',
         fontWeight:'bold',
-        marginTop:10,
+        marginTop:20,
+        fontSize: 20,
     },
     textoDeHistoria:{
         textAlign:'justify',
