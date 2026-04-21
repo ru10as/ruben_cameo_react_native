@@ -1,7 +1,6 @@
 import { Component } from 'react';
 import Calendario from './CalendarioComponent';
 import DetalleExcursion from './DetalleExcursionComponent';
-import { EXCURSIONES } from '../comun/excursiones';
 import Constants from 'expo-constants';
 import { NavigationContainer, DrawerActions } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -13,10 +12,20 @@ import { createDrawerNavigator,   DrawerContentScrollView, DrawerItemList} from 
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colorGaztaroaClaro, colorGaztaroaOscuro } from '../comun/comun';
+import { connect } from 'react-redux'; 
+import { fetchExcursiones, fetchComentarios, fetchCabeceras, fetchActividades } from '../redux/ActionCreators';
+
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
+
+const mapDispatchToProps = (dispatch) => ({ 
+  fetchExcursiones: () => dispatch(fetchExcursiones()), 
+  fetchComentarios: () => dispatch(fetchComentarios()), 
+  fetchCabeceras: () => dispatch(fetchCabeceras()), 
+  fetchActividades: () => dispatch(fetchActividades()), 
+})
 
 function BotonMenu(props) { 
   return ( 
@@ -59,11 +68,11 @@ function CustomDrawerContent(props) {
 
 
 class Campobase extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      excursiones: EXCURSIONES,
-    };
+  componentDidMount() { 
+    this.props.fetchExcursiones(); 
+    this.props.fetchComentarios(); 
+    this.props.fetchCabeceras(); 
+    this.props.fetchActividades(); 
   }
 
   menuHeaderOptions = (title, navigation) => ({ 
@@ -108,8 +117,17 @@ class Campobase extends Component {
           headerTitleStyle: { color: '#fff' }, 
         }} 
       > 
+        
         <Stack.Screen 
           name="Calendario" 
+          component={Calendario}
+          options={({ navigation }) => 
+            this.menuHeaderOptions('Calendario Gaztaroa', navigation) 
+          }
+        />
+        {/* <Stack.Screen 
+          name="Calendario" 
+          //component={Calendario}
           options={({ navigation }) => 
             this.menuHeaderOptions('Calendario Gaztaroa', navigation) 
           }
@@ -117,13 +135,24 @@ class Campobase extends Component {
           {(props) => ( 
             <Calendario 
               {...props} 
-              excursiones={this.state.excursiones} 
+              //excursiones={this.state.excursiones} 
+              excursiones={this.props.excursiones.excursiones}
             /> 
           )} 
-        </Stack.Screen> 
+        </Stack.Screen> */} 
  
         <Stack.Screen 
           name="DetalleExcursion" 
+          component={DetalleExcursion}
+          options={{ 
+            title: 'Detalle Excursión', 
+            headerBackTitle: 'Calendario',
+          }} 
+        />
+
+        {/* <Stack.Screen 
+          name="DetalleExcursion" 
+          //component={DetalleExcursion}
           options={{ 
             title: 'Detalle Excursión', 
             headerBackTitle: 'Calendario',
@@ -132,10 +161,13 @@ class Campobase extends Component {
           {(props) => ( 
             <DetalleExcursion 
               {...props} 
-              excursiones={this.state.excursiones} 
+              //excursiones={this.state.excursiones} 
+              excursiones={this.props.excursiones.excursiones}
             /> 
           )} 
-        </Stack.Screen> 
+        </Stack.Screen>  */}
+
+
       </Stack.Navigator> 
     ); 
   }; 
@@ -281,4 +313,4 @@ const styles = StyleSheet.create({
   }, 
 });
 
-export default Campobase;
+export default connect(null,mapDispatchToProps)(Campobase);

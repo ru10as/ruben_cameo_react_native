@@ -1,9 +1,15 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, ImageBackground, ScrollView, FlatList } from 'react-native';
 import { Card, Text, Divider, IconButton } from 'react-native-paper'; 
-import { EXCURSIONES } from '../comun/excursiones';
-import { COMENTARIOS } from '../comun/comentarios';
 import { baseUrl, colorGaztaroaOscuro } from '../comun/comun';
+import { connect } from 'react-redux';
+
+const mapStateToProps = state => {
+    return {
+        excursiones: state.excursiones,
+        comentarios: state.comentarios
+    }
+}
 
 function RenderExcursion(props) {
   const excursion = props.excursion;
@@ -11,7 +17,6 @@ function RenderExcursion(props) {
   if (excursion != null) {
     return (
       <Card style={styles.card}>
-        {/*<Divider style={styles.lineaCorta} />*/}
         <ImageBackground 
           source={{ uri: baseUrl + excursion.imagen }}
           style={styles.imageBackground}
@@ -100,8 +105,6 @@ class DetalleExcursion extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      excursiones: EXCURSIONES,
-      comentarios: COMENTARIOS, 
       favoritos: [], 
     };
   }
@@ -115,16 +118,19 @@ class DetalleExcursion extends Component {
   render() {
     const { excursionId } = this.props.route.params;
 
+    const excursion = this.props.excursiones.excursiones.find(excursion => excursion.id === +excursionId);
+    const comentarios = this.props.comentarios.comentarios.filter(comentario => comentario.excursionId === +excursionId);
+
     return( 
         <ScrollView> 
             <RenderExcursion 
-                excursion={this.state.excursiones[+excursionId]} 
+                excursion={excursion} 
                 favorita={this.state.favoritos.some(el => el === excursionId)} 
-                onPress={() => this.marcarFavorito(excursionId)} 
+                onPress={() => this.marcarFavorito(excursionId)}
             /> 
 
             <RenderComentario 
-                comentarios={this.state.comentarios.filter((comentario) => comentario.excursionId === excursionId)} 
+                comentarios={comentarios} 
             /> 
         </ScrollView> 
     ); 
@@ -134,7 +140,6 @@ class DetalleExcursion extends Component {
 const styles = StyleSheet.create({
   card: {
     margin: 8,
-    //backgroundColor: '#ffffff',
   },
   image: {
     marginHorizontal: 0,
@@ -159,10 +164,8 @@ const styles = StyleSheet.create({
   imageBackground:{
     width:'100%',
     height:180,
-    //justifyContent: 'flex-start',
     justifyContent:'center',
     alignItems:'center',
-    //marginTop:15,
   },
   imageStyle:{
     resizeMode:'cover',
@@ -183,4 +186,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default DetalleExcursion;
+export default connect(mapStateToProps)(DetalleExcursion);

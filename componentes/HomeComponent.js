@@ -1,10 +1,16 @@
 import { Component } from 'react';
 import { ScrollView, View, StyleSheet, ImageBackground } from 'react-native';
 import { Card, Text, Divider } from 'react-native-paper';
-import { EXCURSIONES } from '../comun/excursiones';
-import { CABECERAS } from '../comun/cabeceras';
-import { ACTIVIDADES } from '../comun/actividades';
 import { baseUrl, colorGaztaroaOscuro } from '../comun/comun';
+import { connect } from 'react-redux';
+
+const mapStateToProps = state => {
+    return {
+        excursiones: state.excursiones,
+        cabeceras: state.cabeceras,
+        actividades: state.actividades
+    }
+}
 
 function RenderItem({ item }) {
   if (!item) {
@@ -14,9 +20,7 @@ function RenderItem({ item }) {
   return (
     <Card style={styles.card}>
       
-      {/*<Divider style={styles.lineaCorta} />*/}
       <ImageBackground 
-        //source={require('./imagenes/40Años.png')}
         source={{ uri: baseUrl + item.imagen }}
         style={styles.imageBackground}
         imageStyle={styles.imageStyle}
@@ -37,21 +41,18 @@ function RenderItem({ item }) {
 }
 
 class Home extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      excursiones: EXCURSIONES,
-      cabeceras: CABECERAS,
-      actividades: ACTIVIDADES,
-    };
-  }
 
   render() {
+
+    const cabecera = this.props.cabeceras.cabeceras?.find(item => item.destacado);
+    const excursion = this.props.excursiones.excursiones?.find(item => item.destacado);
+    const actividad = this.props.actividades.actividades?.find(item => item.destacado);
+
     return (
       <ScrollView>
-        <RenderItem item={this.state.cabeceras.filter((item) => item.destacado)[0]} />
-        <RenderItem item={this.state.excursiones.filter((item) => item.destacado)[0]} />
-        <RenderItem item={this.state.actividades.filter((item) => item.destacado)[0]} />
+          <RenderItem item={cabecera} />
+          <RenderItem item={excursion} />
+          <RenderItem item={actividad} />
       </ScrollView>
     );
   }
@@ -101,4 +102,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Home;
+export default connect(mapStateToProps)(Home);
