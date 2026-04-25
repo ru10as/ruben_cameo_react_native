@@ -4,6 +4,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { List, Divider } from 'react-native-paper';
 import { baseUrl } from '../comun/comun';
 import { connect } from 'react-redux';
+import { IndicadorActividad } from './IndicadorActividadComponent';
+import { Text } from 'react-native-paper';
 
 const mapStateToProps = state => {
     return {
@@ -40,15 +42,29 @@ class Calendario extends Component {
       );
     };
 
-    return (
-      <SafeAreaView style={styles.container}>
-        <FlatList
-          data={this.props.excursiones.excursiones}
-          renderItem={renderCalendarioItem}
-          keyExtractor={(item) => item.id.toString()}
-        />
-      </SafeAreaView>
-    );
+    if (this.props.excursiones.isLoading) {
+      return (
+        <IndicadorActividad />
+      );
+    }
+    else if (this.props.excursiones.errMess) {
+      return (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <Text style={{ color: 'red' }}>{this.props.excursiones.errMess}</Text>
+        </View>
+      );
+    }
+    else {
+      return (
+        <SafeAreaView style={styles.container}>
+          <FlatList
+            data={this.props.excursiones.excursiones}
+            renderItem={renderCalendarioItem}
+            keyExtractor={(item) => item.id.toString()}
+          />
+        </SafeAreaView>
+      );
+    } 
   }
 }
 

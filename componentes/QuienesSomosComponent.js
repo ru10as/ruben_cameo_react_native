@@ -4,6 +4,7 @@ import { FlatList, View, ScrollView, StyleSheet } from "react-native";
 import { connect } from 'react-redux';
 import { Avatar, Card, Text, List, Divider } from "react-native-paper";
 import { baseUrl, colorGaztaroaOscuro } from '../comun/comun';
+import { IndicadorActividad } from './IndicadorActividadComponent';
 
 const mapStateToProps = (state) => {
     return {
@@ -66,24 +67,31 @@ class QuienesSomos extends Component {
         </View>
     );
 
-    render(){
-    return (
+    render() {
+        return (
             <ScrollView style={{ backgroundColor: '#f0f0f0' }}>
                 <Historia />
 
                 <Card style={styles.card}>
                     <Card.Title title="Actividades y recursos" titleStyle={styles.cardTitle} />
-
-                    <FlatList
-                        data={this.props.actividades.actividades}
-                        renderItem={this.renderActividadItem}
-                        keyExtractor={item => item.id.toString()}
-                        scrollEnabled={false}
-                    />
+                    
+                    {this.props.actividades.isLoading ? (
+                        <IndicadorActividad />
+                    ) : this.props.actividades.errMess ? (
+                        <View style={{ padding: 20, alignItems: 'center' }}>
+                            <Text>{this.props.actividades.errMess}</Text>
+                        </View>
+                    ) : (
+                        this.props.actividades.actividades.map((item) => (
+                            <View key={item.id.toString()}>
+                                {this.renderActividadItem({ item })}
+                            </View>
+                        ))
+                    )}
                 </Card>
             </ScrollView>
         );
-}
+    }
 }
 
 const styles = StyleSheet.create({
