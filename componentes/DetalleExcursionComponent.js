@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, ImageBackground, ScrollView, FlatList } from 'react-native';
-import { Card, Text, Divider, IconButton } from 'react-native-paper'; 
+import { View, StyleSheet, ImageBackground, ScrollView, FlatList, Modal } from 'react-native';
+import { Card, Text, Divider, IconButton, TextInput, Button} from 'react-native-paper'; 
 import { baseUrl, colorGaztaroaOscuro } from '../comun/comun';
 import { connect } from 'react-redux';
-import { postFavorito } from '../redux/ActionCreators';
+import { postFavorito, postComentario } from '../redux/ActionCreators';
 
 const mapStateToProps = state => {
     return {
@@ -14,7 +14,9 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-    postFavorito: (excursionId) => dispatch(postFavorito(excursionId))
+    postFavorito: (excursionId) => dispatch(postFavorito(excursionId)),
+    postComentario: (excursionId, valoracion, autor, comentario) => 
+        dispatch(postComentario(excursionId, valoracion, autor, comentario))
 })
 
 function RenderExcursion(props) {
@@ -35,8 +37,6 @@ function RenderExcursion(props) {
           </View>
         </ImageBackground>
 
-
-
         <Card.Content>
           <Text style={styles.descripcion}>
             {excursion.descripcion}
@@ -50,6 +50,12 @@ function RenderExcursion(props) {
                   ? console.log('La excursión ya se encuentra entre las favoritas') 
                   : props.onPress()} 
             /> 
+            <IconButton 
+              icon='pencil' 
+              color={colorGaztaroaOscuro}
+              size={28} 
+              onPress={() => props.onPressComentario()} 
+            />
           </View>
         </Card.Content>
       </Card>
@@ -109,13 +115,41 @@ function RenderComentario(props) {
 
 class DetalleExcursion extends Component {
 
+  constructor(props) {
+        super(props);
+        this.state = {
+            valoracion: 5,
+            autor: '',
+            comentario: '',
+            showModal: false
+        }
+    }
+
+    toggleModal() {
+        this.setState({ showModal: !this.state.showModal });
+    }
+
+    resetForm() {
+        this.setState({
+            valoracion: 5,
+            autor: '',
+            comentario: '',
+            showModal: false
+        });
+    }
+
+    gestionarComentario(excursionId) {
+        this.props.postComentario(excursionId, this.state.valoracion, this.state.autor, this.state.comentario);
+        this.resetForm();
+    }
+
+
   marcarFavorito(excursionId) { 
       this.props.postFavorito(excursionId); 
   }
 
   render() {
     const { excursionId } = this.props.route.params;
-
     const excursion = this.props.excursiones.excursiones.find(excursion => excursion.id === +excursionId);
     const comentarios = this.props.comentarios.comentarios.filter(comentario => comentario.excursionId === +excursionId);
 
@@ -125,11 +159,79 @@ class DetalleExcursion extends Component {
                 excursion={excursion} 
                 favorita={this.props.favoritos.favoritos.some(el => el === excursionId)} 
                 onPress={() => this.marcarFavorito(excursionId)}
+                onPressComentario={() => this.toggleModal()}
             /> 
 
             <RenderComentario 
                 comentarios={comentarios} 
             /> 
+
+            <Modal
+                animationType={"slide"}
+                transparent={false}
+                visible={this.state.showModal}
+                onDismiss={() => this.toggleModal()}
+                onRequestClose={() => this.toggleModal()}
+            >
+                <View style={styles.modal}>
+
+                    <Text style={{ 
+                        fontSize: 24, 
+                        fontWeight: 'bold', 
+                        textAlign: 'center', 
+                        marginBottom: 20 
+                    }}>
+                        Añadir comentario
+                    </Text>
+
+                    <View style={styles.estrellasContainer}>
+                        {[1, 2, 3, 4, 5].map((i) => (
+                            <IconButton
+                                key={i}
+                                icon={i <= this.state.valoracion ? "star" : "star-outline"}
+                                color={colorGaztaroaOscuro}
+                                size={35}
+                                onPress={() => this.setState({ valoracion: i })}
+                            />
+                        ))}
+                    </View>
+
+                    <TextInput
+                        label="Autor"
+                        style={styles.input}
+                        mode="outlined"
+                        left={<TextInput.Icon icon="account" />}
+                        onChangeText={(value) => this.setState({ autor: value })}
+                        value={this.state.autor}
+                    />
+                    <TextInput
+                        label="Comentario"
+                        style={styles.input}
+                        mode="outlined"
+                        left={<TextInput.Icon icon="pencil" />}
+                        onChangeText={(value) => this.setState({ comentario: value })}
+                        value={this.state.comentario}
+                    />
+
+                    <View style={{marginTop: 20}}>
+                        <Button 
+                            mode="contained" 
+                            color={colorGaztaroaOscuro}
+                            onPress={() => this.gestionarComentario(excursionId)}
+                            style={styles.button}
+                        >
+                            ENVIAR
+                        </Button>
+                        <Button 
+                            onPress={() => this.resetForm()}
+                            style={styles.button}
+                        >
+                            CANCELAR
+                        </Button>
+                    </View>
+                </View>
+            </Modal>
+
         </ScrollView> 
     ); 
   }
@@ -179,8 +281,27 @@ const styles = StyleSheet.create({
     borderRadius:5,
   },
   iconoContainer: {
-    alignItems: 'center', 
+    flexDirection: 'row',
+    justifyContent: 'center', 
+    alignItems: 'center',
     marginBottom: 8,
+  },
+  modal: {
+    justifyContent: 'center',
+    margin: 20,
+    marginTop: 100
+  },
+  estrellasContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 20
+  },
+  input: {
+    marginBottom: 10,
+    backgroundColor: 'white'
+  },
+  button: {
+      marginVertical: 5
   }
 });
 
